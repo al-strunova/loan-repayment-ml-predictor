@@ -1,2 +1,4 @@
 /models/preprocessing_pipeline.pkl filter=lfs diff=lfs merge=lfs -text
 /data/applications_history.csv filter=lfs diff=lfs merge=lfs -text
+models/preprocessing_pipeline.pkl filter=lfs diff=lfs merge=lfs -text
+data/applications_history.csv filter=lfs diff=lfs merge=lfs -text
