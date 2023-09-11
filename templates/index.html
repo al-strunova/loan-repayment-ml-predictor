@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Repayment Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2E8B57;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        h2 {
+            margin-top: 2rem;
+            color: #2E8B57;
+        }
+        #uploadForm {
+            margin-top: 1rem;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #2E8B57;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1E7A47;
+        }
+        #progressDiv {
+            margin-top: 1rem;
+            display: none;
+        }
+        #uploadProgress {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+        }
+        #uploadProgress div {
+            width: 0;
+            height: 30px;
+            background-color: #2E8B57;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Loan Repayment Prediction</h1>
+    <p>
+        This prediction model is designed to predict loan repayment behavior based on previous client information. This project revolves around the development of a machine learning model that predicts whether clients will repay their loans on time or face potential delays. By leveraging a comprehensive dataset, which includes client profiles, historical loan data, credit bureau information, payment histories, and application records, the project aims to provide valuable insights to the bank's loan approval process.
+    </p>
+    <h2>Required CSV columns:</h2>
+    <style>
+        table {
+            width: 50%; /* Adjust this as per your requirement */
+            margin: 20px 0; /* Add some margin on top and bottom for spacing */
+            border-collapse: collapse;
+        }
+
+        th, td {
+            width: 50%;
+            text-align: center;
+            padding: 10px 5px; /* Add some padding for better visuals */
+            border: 1px solid #ddd; /* Light gray border */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Light gray background for headers */
+        }
+    </style>
+    <table>
+        <thead>
+            <tr>
+                <th>APPLICATION_NUMBER</th>
+                <th>NAME_CONTRACT_TYPE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Sample Number</td>
+                <td>Sample Type</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><a href="/data/test.csv" download>Click here to download the example test.csv.</a></p>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload & Predict</button>
+    </form>
+    <div id="progressDiv">
+        <div id="uploadProgress">
+            <div></div>
+        </div>
+    </div>
+    <div id="result"></div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressBar = uploadProgress.children[0];
+            const progressDiv = document.getElementById('progressDiv');
+            const resultDiv = document.getElementById('result');
+
+            progressDiv.style.display = 'block';
+
+            // Simulate progress update
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+
+                    // Optionally hide the progress bar after a delay when upload completes
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                    }, 2000);
+                }
+            }, 100);
+
+            try {
+                const response = await fetch('/predict/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(interval); // Stop the simulated progress once we get a response
+
+                if (response.headers.get('Content-Type').startsWith('text/csv')) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'predictions.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    resultDiv.textContent = 'File download started!';
+                } else {
+                    const result = await response.json();
+                    resultDiv.textContent = JSON.stringify(result);
+                }
+
+            } catch (error) {
+                clearInterval(interval); // Stop the simulated progress if an error occurs
+                resultDiv.textContent = 'An error occurred while uploading the file. Details: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
