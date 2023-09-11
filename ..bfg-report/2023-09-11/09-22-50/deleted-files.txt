@@ -1,2 +1,0 @@
-52adb375859c59425810e8c23e8cb0cd998abb65 134 applications_history.csv
-2f9df4bf93d37d1623a38f9ccf0c2663e337c678 267188369 applications_history.csv
