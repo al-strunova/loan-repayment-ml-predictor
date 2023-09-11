@@ -4,6 +4,9 @@ FROM python:3.9-slim
 # Set the working directory in docker
 WORKDIR /app
 
+# Install system-level dependencies (including libgomp1)
+RUN apt-get update && apt-get install -y libgomp1
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
@@ -14,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Run app.py when the container launches
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
