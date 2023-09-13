@@ -12,6 +12,7 @@ Predict the likelihood of a loan being repaid using a machine learning model.
   - `Predicting_Loan_Repayment_EDA.ipynb`: Conducts Exploratory Data Analysis (EDA) and establishes a baseline model.
   - `Feature_Preprocessing_&_Model_Analysis.ipynb`: Manages data preprocessing, feature engineering, model training, and the selection of the optimal algorithm.
 - **data**: Directory containing all data files utilized throughout the project.
+  > **Note**: Storing raw training data directly in the project repository is generally not a best practice, especially for large datasets or sensitive information. In this case, the data is included for demonstration and exploration purposes only.
 - **src**: Central repository for scripts pivotal to the FastAPI service, prediction mechanics, and training procedures.
 - **models**: Maintains the top-performing model alongside preprocessing pipelines, ensuring both reproducibility and ease of reapplication.
 - **templates**: Consists of XML files tasked with rendering the user interface.
